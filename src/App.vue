@@ -1,12 +1,92 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div id="about" class="about flex flex-col items-center">
+      <h1>Years</h1>
+      <input
+        class="bg-gray-300 px-4 py-2 z-10"
+        type="text"
+        v-model="year"
+        list="years"
+        @change="updateYear"
+      />
+      <datalist class="w-48 bg-gray-800 text-white" id="years">
+        <option
+          class="py-2 border-b cursor-pointer"
+          v-for="year in years"
+          :key="year.year"
+          @click="updateYear"
+          >{{ year.year }}</option
+        >
+      </datalist>
+    <h4 v-if="year">Selected year is {{year}}</h4>
+    <br>
+    <br>
+    <h1>Makes</h1>
+    <input
+      class="bg-gray-300 px-4 py-2 z-10"
+      type="text"
+      v-model="make"
+      list="makes"
+    />
+    <datalist class="w-48 bg-gray-800 text-white" id="makes">
+      <option
+        class="py-2 border-b cursor-pointer"
+        v-for="make in makes"
+        :key="make.make"
+        >{{ make.make }}</option
+      >
+    </datalist>
+    <h4 v-if="make">Selected makes is {{make}}</h4>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+import { mapActions, mapGetters, mapState } from 'vuex';
+const baseURL =
+  "https://rateengine.ship.cars/v2/vehicles/years/?fbclid=IwAR3dwvL6rAC3rojXSO8zlwF6ZF-_WsenLUYcIwOcUv8q7z278JrHAyn7uOI&format=json&token=5cbe12fb62f4941267d623499a2a4fd5948fd3ef";
+export default {
+  name: "about",
+  data: () => {
+    return {
+      //This is where I give Inıtial state for year
+      year: "",
+      years: [],
+      make: "",
+      makes: [],
+    };
+  },
+  computed:{
+    ...mapState([
+      'year'
+    ]),
+    ...mapGetters([
+      'makesUrl'
+    ])
+  },
+  methods:{
+    updateYear(){
+      this.updateYearVuex(this.year)
+    },
+    ...mapActions([
+      'updateYearVuex'
+    ])
+  },
+  async created() {
+    this.onClickk;
+    try {
+      const firstresponse = await axios.get(baseURL);
+      this.years = firstresponse.data;
+      const secondresponse = await axios.get(
+        this.makesUrl
+      );
+      this.makes = secondresponse.data;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+};
+</script>
+
 
 <style>
 #app {

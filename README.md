@@ -10,15 +10,12 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Data Store
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
+Vuex data stored in './src/store/index.js' directory
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Main Component
+```
+Necessary code is inside of './src/App.vue' directory
+```
