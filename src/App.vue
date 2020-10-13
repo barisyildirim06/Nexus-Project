@@ -7,35 +7,61 @@
         v-model="year"
         list="years"
         @change="updateYear"
+        @click="getMakes"
       />
       <datalist class="w-48 bg-gray-800 text-white" id="years">
         <option
           class="py-2 border-b cursor-pointer"
           v-for="year in years"
           :key="year.year"
-          @click="updateYear"
+          @change="getMakes"
           >{{ year.year }}</option
         >
       </datalist>
     <h4 v-if="year">Selected year is {{year}}</h4>
     <br>
     <br>
+
+
     <h1>Makes</h1>
     <input
       class="bg-gray-300 px-4 py-2 z-10"
       type="text"
       v-model="make"
       list="makes"
+      @change="updateMake"
+      @click="getModels"
     />
     <datalist class="w-48 bg-gray-800 text-white" id="makes">
       <option
         class="py-2 border-b cursor-pointer"
         v-for="make in makes"
         :key="make.make"
+         @click="getModels"
         >{{ make.make }}</option
       >
     </datalist>
     <h4 v-if="make">Selected makes is {{make}}</h4>
+    <br>
+    <br>
+
+
+    <h1>models</h1>
+    <input
+      class="bg-gray-300 px-4 py-2 z-10"
+      type="text"
+      v-model="model"
+      list="models"
+    />
+    <datalist class="w-48 bg-gray-800 text-white" id="models">
+      <option
+        class="py-2 border-b cursor-pointer"
+        v-for="model in models"
+        :key="model.model"
+        >{{ model.model }}</option
+      >
+    </datalist>
+    <h4 v-if="model">Selected models is {{model}}</h4>
   </div>
 </template>
 
@@ -53,33 +79,49 @@ export default {
       years: [],
       make: "",
       makes: [],
+      model: "",
+      models: [],
     };
   },
   computed:{
     ...mapState([
-      'year'
+      'year',
+      'make',
     ]),
     ...mapGetters([
-      'makesUrl'
+      'makesUrl',
+      'modelsUrl'
     ])
   },
   methods:{
     updateYear(){
       this.updateYearVuex(this.year)
     },
+    updateMake(){
+      this.updateMakeVuex(this.make)
+    },
     ...mapActions([
-      'updateYearVuex'
-    ])
+      'updateYearVuex',
+      'updateMakeVuex'
+    ]),
+    async getMakes(){
+      await axios.get(this.makesUrl)
+      .then((res)=>{
+        this.makes = res.data
+      })
+    },
+    async getModels(){
+      await axios.get(this.modelsUrl)
+      .then((res)=>{
+        this.models = res.data
+      })
+    }
   },
   async created() {
     this.onClickk;
     try {
       const firstresponse = await axios.get(baseURL);
       this.years = firstresponse.data;
-      const secondresponse = await axios.get(
-        this.makesUrl
-      );
-      this.makes = secondresponse.data;
     } catch (e) {
       console.error(e);
     }
