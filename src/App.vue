@@ -31,6 +31,7 @@
       list="makes"
       @change="updateMake"
       @click="getModels"
+      :disabled="makes.length ? false : true"
     />
     <datalist class="w-48 bg-gray-800 text-white" id="makes">
       <option
@@ -52,6 +53,7 @@
       type="text"
       v-model="model"
       list="models"
+      :disabled="models.length ? false : true"
     />
     <datalist class="w-48 bg-gray-800 text-white" id="models">
       <option
